@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ПОДБОРКИН — маркетплейс лучших подборок</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1a1f2e;
+        }
+
+        /* главный контейнер */
+        .app {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 24px 40px;
+        }
+
+        /* ШАПКА с названием и поиском */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            gap: 16px;
+        }
+
+        .logo-area h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2b6e3c, #1e8f3e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .logo-area p {
+            font-size: 0.8rem;
+            color: #4b5563;
+            margin-top: 4px;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            max-width: 480px;
+            min-width: 240px;
+        }
+
+        .search-box {
+            display: flex;
+            width: 100%;
+            background: white;
+            border-radius: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s;
+        }
+        .search-box:focus-within {
+            border-color: #2b6e3c;
+            box-shadow: 0 4px 12px rgba(43,110,60,0.15);
+        }
+        .search-box input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            background: transparent;
+            font-size: 1rem;
+            outline: none;
+            border-radius: 60px;
+        }
+        .search-box button {
+            background: #2b6e3c;
+            border: none;
+            padding: 0 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+            margin: 4px;
+            border-radius: 50px;
+        }
+        .search-box button:hover {
+            background: #1f5430;
+        }
+
+        /* основная сетка: фильтры слева + товары справа */
+        .main-layout {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        /* БОКОВАЯ ПАНЕЛЬ ФИЛЬТРОВ (20 видов) */
+        .filters-sidebar {
+            flex: 0 0 260px;
+            background: white;
+            border-radius: 28px;
+            padding: 20px 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid #edf2f7;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filters-sidebar h3 {
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            padding-left: 6px;
+            border-left: 4px solid #2b6e3c;
+        }
+
+        .filter-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-category {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 10px;
+            border-radius: 40px;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #2d3a3f;
+        }
+
+        .filter-category:hover {
+            background: #eef5ef;
+        }
+
+        .filter-category.active {
+
+
+background: #2b6e3c20;
+            color: #1f5a2e;
+            font-weight: 600;
+        }
+
+        .filter-category input {
+            width: 18px;
+            height: 18px;
+            accent-color: #2b6e3c;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .filter-category label {
+            cursor: pointer;
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .category-count {
+            font-size: 0.7rem;
+            background: #eef2f6;
+            padding: 2px 8px;
+            border-radius: 30px;
+            color: #3b4e5a;
+        }
+
+        .reset-filters {
+            margin-top: 25px;
+            padding: 10px;
+            background: #f1f5f9;
+            border: none;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2c3e44;
+        }
+        .reset-filters:hover {
+            background: #e2e8f0;
+        }
+
+        /* ПРАВАЯ ОБЛАСТЬ: СЕТКА ТОВАРОВ по ВИДАМ */
+        .products-area {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .category-section {
+            margin-bottom: 48px;
+            scroll-margin-top: 80px;
+        }
+
+        .category-title {
+            font-size: 1.7rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 6px solid #2b6e3c;
+            padding-left: 18px;
+        }
+        .category-title span {
+            background: #eef2ff;
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: normal;
+            color: #2c6e3c;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            border: 1px solid #eef2fa;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -12px rgba(0,0,0,0.15);
+        }
+
+        .product-img {
+            background: #f8fafc;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            border-bottom: 1px solid #ecf3f9;
+        }
+
+        .product-info {
+            padding: 16px 14px 18px;
+        }
+
+        .product-name {
+            font-weight: 700;
+            font-size: 1rem;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+
+        .product-price {
+            font-weight: 800;
+            color: #2b6e3c;
+            font-size: 1.2rem;
+            margin: 8px 0 6px;
+        }
+
+        .product-rating {
+            font-size: 0.75rem;
+            color: #f5b042;
+            letter-spacing: 1px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 32px;
+            font-size: 1.2rem;
+            color: #5e6f8d;
+        }
+
+        max-width: 780px {
+            .main-layout {
+                flex-direction: column;
+            }
+            .filters-sidebar {
+                position: static;
+                width: 100%;
+                flex: auto;
+            }
+            .filter-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            }
+            .app {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="header">
+        <div cl
+
+
+ass="logo-area">
+            <h1>📦 ПОДБОРКИН</h1>
+            <p>умные подборки для каждого</p>
+        </div>
+        <div class="search-wrapper">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Поиск товаров, например: ноутбук, футболка, чайник..." autocomplete="off">
+                <button id="searchBtn">Найти</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <!-- Фильтры категорий слева (20 видов) -->
+        <aside class="filters-sidebar">
+            <h3>🎯 Категории</h3>
+            <div class="filter-list" id="filterListContainer"></div>
+            <button class="reset-filters" id="resetFiltersBtn">✖ Сбросить все фильтры</button>
+        </aside>
+
+        <!-- Область каталога товаров: вывод секций по категориям -->
+        <main class="products-area" id="productsArea"></main>
+    </div>
+</div>
+
+<script>
+    // ----- ГЕНЕРАЦИЯ 20 КАТЕГОРИЙ, В КАЖДОЙ ПО 6 ТОВАРОВ -----
+    const categories = [
+        "Смартфоны", "Ноутбуки", "Наушники", "Умные часы", "Телевизоры",
+        "Футболки", "Джинсы", "Кроссовки", "Пальто", "Рюкзаки",
+        "Миксеры", "Кофеварки", "Холодильники", "Пылесосы", "Утюги",
+        "Игрушки", "Книги", "Спорттовары", "Косметика", "Мебель"
+    ];
+
+    // вспомогательные данные для генерации товаров (реалистичные названия и цены)
+    const productNameTemplates = {
+        Смартфоны: ["Galaxy A54", "iPhone 15 Pro", "Xiaomi 13T", "Pixel 8", "Realme 11 Pro", "OnePlus Nord 3"],
+        Ноутбуки: ["MacBook Air M2", "Zenbook 14", "Legion 5 Pro", "Swift 3", "Vivobook 15", "Gram 17"],
+        Наушники: ["QuietComfort 45", "WH-1000XM5", "AirPods Pro 2", "Momentum 4", "Galaxy Buds2 Pro", "Soundcore Liberty"],
+        "Умные часы": ["Watch Series 9", "Galaxy Watch6", "Versa 4", "GTR 4", "Fenix 7", "Band 8"],
+        Телевизоры: ["OLED C3", "QN90C", "A80L", "U8K", "The Frame", "C845"],
+        Футболки: ["Хлопковая базовая", "Поло Classic", "Спортивная дышащая", "Оверсайз принт", "Льняная", "Трикотажная"],
+        Джинсы: ["Слим фит", "Багги карго", "Классические прямые", "Скинни черные", "Зауженные синие", "Рваные"],
+        Кроссовки: ["Air Max 90", "Ultraboost 22", "RS-X", "Chuck 70", "Gel-Kayano", "New Balance 574"],
+        Пальто: ["Шерстяное кашемир", "Тренч бежевый", "Пуховик короткий", "Пальто-оверсайз", "Дубленка", "Парка"],
+        Рюкзаки: ["Urban Daypack", "Laptop Backpack", "Треккинговый 30L", "Спортивный Air", "Кожаный портфель", "Складной"],
+        Миксеры: ["Планетарный 5л", "Ручной погружной", "Мощность 1000W", "Компактный Turbo", "Stand Mixer Pro", "Mini Chopper"],
+        Кофеварки: ["Рожковая Inissia", "Капельная Moccamaster", "Эспрессо машинка", "Кофемашина автомат", "Гейзерная Bialetti", "Френч-пресс"],
+        Холодильники: ["Side-by-Side", "No Frost серебро", "Двухкамерный Inverter", "Маленький барный", "Smart WiFi", "Retro стиль"],
+        Пылесосы: ["Робот-пылесос S8", "Вертикальный Cyclone", "Моющий пол", "Компактный ручной", "Пылесос-швабра", "Мощный 2000W"],
+        Утюги: ["Паровой вертикальный", "Керамика Autoclean", "Дорожный мини", "Профессиональный с парогенератором", "Беспроводной", "Антипригар"],
+        Игрушки: ["Конструктор 3в1", "Плюшевый мишка", "Набор для творчества", "Радиоуправляемый джип", "Кукла-принцесса", "Пазл 1000 дет"],
+        Книги: ["Программирование JS", "Искусство войны", "Атлант расправил плечи", "Маркетинг 5.0", "Фантастика Дюна", "Детектив новый"],
+        Спорттовары: ["Коврик для йоги", "Гантели 5кг", "Эспандер", "Скакалка", "Мяч баскетбольный", "Бутылка shaker"],
+        Косметика: ["Увлажняющий крем", "Сыворотка витамин C", "Гель для умывания", "Тональный флюид", "Тушь объёмная", "Помада матовая"],
+        Мебель: ["Кресло-качалка", "Письменный стол", "Стеллаж этажерка", "Комод современный", "Офисное кресло", "Прикроватная тумба"]
+    };
+
+    // формируем полный список категорий с товарами
+    let fullCatalog = [];
+
+    categories.forEach(cat => {
+
+
+const templates = productNameTemplates[cat] || [`${cat} премиум`, `${cat} стандарт`, `${cat} экономия`, `${cat} PRO`, `${cat} Max`, `${cat} Lite`];
+        const items = [];
+        for (let i = 0; i < 6; i++) {
+            let title = "";
+            if (templates[i]) title = templates[i];
+            else title = `${cat} ${String.fromCharCode(65+i)}${i+1}`;
+
+            // цена от 500 до 150000 в зависимости от категории
+            let basePrice = 999;
+            if (cat === "Смартфоны" || cat === "Ноутбуки") basePrice = 45000;
+            else if (cat === "Телевизоры") basePrice = 32000;
+            else if (cat === "Холодильники") basePrice = 48000;
+            else if (cat === "Кроссовки") basePrice = 5500;
+            else if (cat === "Книги") basePrice = 890;
+            else if (cat === "Игрушки") basePrice = 1250;
+            else if (cat === "Косметика") basePrice = 980;
+            else if (cat === "Мебель") basePrice = 11200;
+            else basePrice = 1990 + (i * 370);
+            
+            const priceVariation = Math.floor(basePrice * (0.8 + Math.random() * 0.7));
+            const finalPrice = priceVariation > 300 ? priceVariation : 899;
+            
+            items.push({
+                id: `${cat.replace(/\s/g,'')}_${i}`,
+                name: title,
+                price: finalPrice,
+                rating: (3 + Math.random() * 2).toFixed(1),
+                emoji: getEmojiForCat(cat, i)
+            });
+        }
+        fullCatalog.push({
+            category: cat,
+            products: items
+        });
+    });
+
+    function getEmojiForCat(cat, idx) {
+        const map = {
+            Смартфоны: "📱", Ноутбуки: "💻", Наушники: "🎧", "Умные часы": "⌚", Телевизоры: "📺",
+            Футболки: "👕", Джинсы: "👖", Кроссовки: "👟", Пальто: "🧥", Рюкзаки: "🎒",
+            Миксеры: "🥄", Кофеварки: "☕", Холодильники: "🧊", Пылесосы: "🧹", Утюги: "🧺",
+            Игрушки: "🧸", Книги: "📚", Спорттовары: "🏋️", Косметика: "💄", Мебель: "🪑"
+        };
+        return map[cat] || "📦";
+    }
+
+    // DOM элементы
+    const filterContainer = document.getElementById("filterListContainer");
+    const productsArea = document.getElementById("productsArea");
+    const searchInput = document.getElementById("searchInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const resetBtn = document.getElementById("resetFiltersBtn");
+
+    // состояние: выбранные категории (множество)
+    let selectedCategories = new Set();  // пустое = показать всё
+    let searchQuery = "";
+
+    // отрисовка левого блока фильтров (20 чекбоксов)
+    function renderFilters() {
+        filterContainer.innerHTML = "";
+        categories.forEach(cat => {
+            const filterDiv = document.createElement("div");
+            filterDiv.className = "filter-category";
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.id = `filter_${cat}`;
+            checkbox.checked = selectedCategories.has(cat);
+            checkbox.addEventListener("change", (e) => {
+                if (checkbox.checked) {
+                    selectedCategories.add(cat);
+                } else {
+                    selectedCategories.delete(cat);
+                }
+                renderProductsAndFilters(); // обновляем товары и чекбоксы
+            });
+            const label = document.createElement("label");
+            label.htmlFor = `filter_${cat}`;
+            label.textContent = cat;
+            const countSpan = document.createElement("span");
+            const catData = fullCatalog.find(c => c.category === cat);
+            const totalItems = catData ? catData.products.length : 0;
+            countSpan.className = "category-count";
+            countSpan.textContent = totalItems;
+
+            filterDiv.appendChild(checkbox);
+            filterDiv.appendChild(label);
+            filterDiv.appendChild(countSpan);
+            filterContainer.appendChild(filterDiv);
+        }
+
+
+);
+    }
+
+    // фильтрация товаров с учетом категорий + поиска
+    function getFilteredProducts() {
+        // проходим по всем категориям
+        let filteredByCat = [];
+        if (selectedCategories.size === 0) {
+            // все категории
+            filteredByCat = fullCatalog.map(catGroup => ({
+                category: catGroup.category,
+                products: [...catGroup.products]
+            }));
+        } else {
+            filteredByCat = fullCatalog.filter(catGroup => selectedCategories.has(catGroup.category))
+                                        .map(catGroup => ({
+                                            category: catGroup.category,
+                                            products: [...catGroup.products]
+                                        }));
+        }
+        
+        // если поисковый запрос не пуст
+        if (searchQuery.trim() !== "") {
+            const lowerQuery = searchQuery.trim().toLowerCase();
+            filteredByCat = filteredByCat.map(catGroup => {
+                const matchedProducts = catGroup.products.filter(product => 
+                    product.name.toLowerCase().includes(lowerQuery) || 
+                    catGroup.category.toLowerCase().includes(lowerQuery)
+                );
+                return { category: catGroup.category, products: matchedProducts };
+            }).filter(catGroup => catGroup.products.length > 0);
+        }
+        return filteredByCat;
+    }
+
+    // отрисовка всех товаров по секциям (каждая категория и 6 товаров, но после фильтра может быть меньше)
+    function renderProducts() {
+        const filteredData = getFilteredProducts();
+        if (filteredData.length === 0) {
+            productsArea.innerHTML = `<div class="no-results"> 😕 Ничего не найдено по запросу «${searchQuery}». Попробуйте другие слова или сбросьте фильтры.</div>`;
+            return;
+        }
+
+        let html = "";
+        filteredData.forEach(catGroup => {
+            const catName = catGroup.category;
+            const products = catGroup.products;
+            if (products.length === 0) return;
+            html += `<div class="category-section" data-category="${catName}">
+                        <div class="category-title">
+                            ${getEmojiForCat(catName,0)} ${catName}
+                            <span>${products.length} товаров</span>
+                        </div>
+                        <div class="product-grid">`;
+            products.forEach(prod => {
+                const stars = generateStars(parseFloat(prod.rating));
+                html += `<div class="product-card">
+                            <div class="product-img">${prod.emoji}</div>
+                            <div class="product-info">
+                                <div class="product-name">${escapeHtml(prod.name)}</div>
+                                <div class="product-price">${formatPrice(prod.price)} ₽</div>
+                                <div class="product-rating">${stars} ${prod.rating}</div>
+                            </div>
+                        </div>`;
+            });
+            html += `</div></div>`;
+        });
+        productsArea.innerHTML = html;
+    }
+
+    // синхронный рендер фильтров (чтобы чекбоксы соответствовали состоянию) + продуктов
+    function renderProductsAndFilters() {
+        renderFilters();   // обновим интерфейс фильтров (чекерится актуальное selectedCategories)
+        renderProducts();  // отрисовка товаров с учетом фильтров + поиска
+    }
+
+    // вспомогательные функции
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    }
+
+    function generateStars(rating) {
+        const full = Math.floor(rating);
+        const half = rating % 1 >= 0.5 ? 1 : 0;
+        let starString = "";
+        for (let i = 0; i < full; i++) starString += "★";
+        if (half) starString += "½";
+        for (let i = 0; i < 5 - full - half; i++) starString += "☆";
+        return starString;
+    }
+
+    funct
+
+
+ion escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Обработчики поиска
+    function performSearch() {
+        searchQuery = searchInput.value;
+        renderProductsAndFilters();
+    }
+
+    function resetAllFilters() {
+        selectedCategories.clear();
+        searchInput.value = "";
+        searchQuery = "";
+        renderProductsAndFilters();
+    }
+
+    // Инициализация событий
+    searchBtn.addEventListener("click", performSearch);
+    searchInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") performSearch();
+    });
+    resetBtn.addEventListener("click", resetAllFilters);
+
+    // первоначальный рендер (показываем всё)
+    renderFilters();
+    renderProducts();
+</script>
+</body>
+</html>
