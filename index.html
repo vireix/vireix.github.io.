@@ -1,117 +1,89 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ПОДБОРКИН - Маркетплейс</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        margin: 0;
-    }
-    .sidebar {
-        width: 250px;
-        padding: 20px;
-        background-color: #f5f5f5;
-        border-right: 1px solid #ccc;
-    }
-    .main {
-        flex: 1;
-        padding: 20px;
-    }
-    h2 {
-        margin-top: 0;
-    }
-    .product {
-        border: 1px solid #ccc;
-        padding: 10px;
-        margin-bottom: 10px;
-        border-radius: 5px;
-    }
-    label {
-        display: block;
-        margin-top: 10px;
-    }
-    input[type="number"], input[type="text"] {
-        width: 100%;
-        padding: 5px;
-    }
-    button {
-        margin-top: 10px;
-        padding: 5px 10px;
-    }
-</style>
-</head>
-<body>
+Podborkin Marketplace Demo
+· typescript
+import { useState } from "react";
 
-<div class="sidebar">
-    <h2>Фильтры</h2>
-    <label>Цена от:
-        <input type="number" id="minPrice" placeholder="0">
-    </label>
-    <label>Цена до:
-        <input type="number" id="maxPrice" placeholder="1000">
-    </label>
-    <label>Время доставки (дней):
-        <input type="number" id="deliveryTime" placeholder="7">
-    </label>
-    <label>Поиск:
-        <input type="text" id="searchTerm" placeholder="Ключевое слово">
-    </label>
-    <button onclick="applyFilters()">Применить фильтры</button>
-</div>
+const mockData = {
+  "телефоны": Array.from({ length: 15 }, (_, i) => ({
+    id: i,
+    name: `Смартфон ${i + 1}`,
+    price: Math.floor(Math.random() * 50000) + 10000,
+    delivery: Math.floor(Math.random() * 10) + 1,
+    image: `https://via.placeholder.com/150?text=Phone+${i + 1}`,
+  })),
+  "ноутбуки": Array.from({ length: 15 }, (_, i) => ({
+    id: i,
+    name: `Ноутбук ${i + 1}`,
+    price: Math.floor(Math.random() * 100000) + 30000,
+    delivery: Math.floor(Math.random() * 10) + 1,
+    image: `https://via.placeholder.com/150?text=Laptop+${i + 1}`,
+  })),
+};
 
-<div class="main">
-    <h2>Товары</h2>
-    <div id="productList"></div>
-</div>
+export default function Podborkin() {
+  const [query, setQuery] = useState("телефоны");
+  const [maxPrice, setMaxPrice] = useState(100000);
+  const [maxDelivery, setMaxDelivery] = useState(10);
 
-<script>
-const products = [
-    {name: "Смартфон", price: 300, delivery: 3, tags: ["электроника", "телефон"]},
-    {name: "Ноутбук", price: 800, delivery: 5, tags: ["электроника", "компьютер"]},
-    {name: "Книга", price: 20, delivery: 2, tags: ["книги", "образование"]},
-    {name: "Наушники", price: 50, delivery: 4, tags: ["электроника", "звук"]},
-    {name: "Рюкзак", price: 40, delivery: 3, tags: ["одежда", "сумки"]}
-];
+  const products = mockData[query] || [];
 
-function displayProducts(filteredProducts) {
-    const container = document.getElementById('productList');
-    container.innerHTML = "";
-    if (filteredProducts.length === 0) {
-        container.innerHTML = "<p>Нет товаров по выбранным фильтрам.</p>";
-        return;
-    }
-    filteredProducts.forEach(product => {
-        const div = document.createElement('div');
-        div.className = "product";
-        div.innerHTML = `<strong>${product.name}</strong>
-Цена: $${product.price}
-Доставка: ${product.delivery} дня(д)`;
-        container.appendChild(div);
-    });
+  const filtered = products.filter(
+    (p) => p.price <= maxPrice && p.delivery <= maxDelivery
+  );
+
+  return (
+    <div className="flex h-screen font-sans">
+      {/* Sidebar */}
+      <div className="w-64 p-4 border-r">
+        <h2 className="text-xl font-bold mb-4">Фильтры</h2>
+
+        <label className="block mb-2">Макс. цена: {maxPrice} ₽</label>
+        <input
+          type="range"
+          min="1000"
+          max="100000"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(Number(e.target.value))}
+          className="w-full mb-4"
+        />
+
+        <label className="block mb-2">
+          Доставка до: {maxDelivery} дней
+        </label>
+        <input
+          type="range"
+          min="1"
+          max="10"
+          value={maxDelivery}
+          onChange={(e) => setMaxDelivery(Number(e.target.value))}
+          className="w-full"
+        />
+      </div>
+
+      {/* Main */}
+      <div className="flex-1 p-6 overflow-auto">
+        <h1 className="text-2xl font-bold mb-4">ПОДБОРКИН</h1>
+
+        <input
+          type="text"
+          placeholder="Введите категорию (телефоны, ноутбуки...)"
+          value={query}
+          onChange={(e) => setQuery(e.target.value.toLowerCase())}
+          className="border p-2 mb-6 w-full rounded"
+        />
+
+        <div className="grid grid-cols-3 gap-4">
+          {filtered.map((item) => (
+            <div key={item.id} className="border rounded-2xl p-4 shadow">
+              <img src={item.image} alt={item.name} className="mb-2" />
+              <h3 className="font-semibold">{item.name}</h3>
+              <p>{item.price} ₽</p>
+              <p className="text-sm text-gray-500">
+                Доставка: {item.delivery} дней
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 }
-
-function applyFilters() {
-    const minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
-    const maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-    const deliveryTime = parseFloat(document.getElementById('deliveryTime').value) || Infinity;
-    const searchTerm = document.getElementById('searchTerm').value.toLowerCase();
-
-    const filtered = products.filter(p => 
-        p.price >= minPrice &&
-        p.price <= maxPrice &&
-        p.delivery <= deliveryTime &&
-        (p.name.toLowerCase().includes(searchTerm) || p.tags.some(tag => tag.includes(searchTerm)))
-    );
-
-    displayProducts(filtered);
-}
-
-// Показать все товары при загрузке
-displayProducts(products);
-</script>
-
-</body>
-</html>
