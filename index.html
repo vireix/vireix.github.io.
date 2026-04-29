@@ -1,496 +1,227 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>ПОДБОРКИН — Маркетплейс товаров</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-    }
-
-    body {
-      background: #f8fafc;
-      color: #0f172a;
-    }
-
-    /* Хедер */
-    .header {
-      background: linear-gradient(135deg, #0f2b1d 0%, #1f4932 100%);
-      color: white;
-      padding: 1.2rem 2rem;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .header h1 {
-      font-size: 1.9rem;
-      letter-spacing: 0.5px;
-      font-weight: 700;
-    }
-
-    .header p {
-      font-size: 0.8rem;
-      opacity: 0.9;
-      margin-top: 4px;
-    }
-
-    /* Две колонки */
-    .app-container {
-      display: flex;
-      max-width: 1440px;
-      margin: 0 auto;
-      min-height: calc(100vh - 85px);
-    }
-
-    /* Сайдбар с фильтрами */
-    .filters-sidebar {
-      width: 280px;
-      background: white;
-      border-right: 1px solid #e2e8f0;
-      padding: 1.5rem 1rem;
-      flex-shrink: 0;
-      height: calc(100vh - 85px);
-      position: sticky;
-      top: 85px;
-      overflow-y: auto;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.02);
-    }
-
-    .filter-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .filter-header h3 {
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .filter-btn {
-      background: #f1f5f9;
-      border: none;
-      padding: 0.2rem 0.8rem;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      font-weight: 500;
-      color: #1f4932;
-      transition: 0.2s;
-    }
-
-    .filter-btn:hover {
-      background: #e2e8f0;
-    }
-
-    /* список категорий */
-    .categories-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-
-    .category-item {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.4rem 0.5rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .category-item:hover {
-      background: #f1f5f9;
-    }
-
-    .category-item input {
-      width: 18px;
-      height: 18px;
-      accent-color: #1f4932;
-      cursor: pointer;
-    }
-
-    .category-item label {
-      font-size: 0.9rem;
-      font-weight: 500;
-      flex: 1;
-      cursor: pointer;
-      color: #1e293b;
-    }
-
-    .cat-count {
-      background: #eef2ff;
-      font-size: 0.7rem;
-      padding: 2px 8px;
-      border-radius: 30px;
-      color: #1f4932;
-      font-weight: 500;
-    }
-
-    /* область товаров */
-    .products-area {
-      flex: 1;
-      padding: 1.5rem 2rem;
-    }
-
-    .products-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      margin-bottom: 1.8rem;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 0.5rem;
-    }
-
-    .result-info {
-      background: #eef2ff;
-      padding: 0.25rem 1.2rem;
-      border-radius: 40px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #1f4932;
-    }
-
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.8rem;
-      animation: fade 0.25s ease;
-    }
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(6px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-
-    .product-card {
-      background: white;
-      border-radius: 24px;
-      overflow: hidden;
-      transition: all 0.25s;
-      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid #edf2f7;
-    }
-
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
-    }
-
-
-.product-img {
-      width: 100%;
-      height: 160px;
-      background: #f1f5f9;
-      object-fit: cover;
-    }
-
-    .product-info {
-      padding: 1rem 1rem 1.2rem;
-    }
-
-    .product-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      line-height: 1.3;
-      margin-bottom: 0.3rem;
-    }
-
-    .product-category {
-      display: inline-block;
-      background: #ecfdf5;
-      color: #1f4932;
-      font-size: 0.65rem;
-      padding: 0.2rem 0.7rem;
-      border-radius: 20px;
-      margin: 0.5rem 0 0.4rem;
-      font-weight: 500;
-    }
-
-    .product-price {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #14532d;
-      margin: 0.3rem 0;
-    }
-
-    .buy-btn {
-      background: #1f4932;
-      width: 100%;
-      border: none;
-      color: white;
-      padding: 0.6rem;
-      border-radius: 40px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.15s;
-      margin-top: 0.5rem;
-    }
-
-    .buy-btn:hover {
-      background: #0f2b1d;
-      transform: scale(0.98);
-    }
-
-    max-width: 780px {
-      .app-container {
-        flex-direction: column;
-      }
-      .filters-sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-        top: 0;
-        border-right: 0;
-        border-bottom: 1px solid #e2e8f0;
-        max-height: 320px;
-      }
-      .products-area {
-        padding: 1rem;
-      }
-      .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 1rem;
-      }
-      .product-img {
-        height: 130px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Маркетплейс — прототип</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', sans-serif; }
+        body { background: #f3f4f6; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { background: white; padding: 16px 24px; border-radius: 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        h1 { font-size: 24px; background: linear-gradient(135deg, #2563eb, #7c3aed); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .search input { padding: 10px 16px; border-radius: 40px; border: 1px solid #ddd; width: 260px; font-size: 14px; }
+        .cart-btn { background: #2563eb; color: white; border: none; padding: 8px 18px; border-radius: 40px; font-weight: bold; cursor: pointer; }
+        .filters { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+        .filter-btn { background: white; border: 1px solid #ccc; padding: 8px 18px; border-radius: 40px; cursor: pointer; transition: all 0.2s; }
+        .filter-btn.active { background: #2563eb; color: white; border-color: #2563eb; }
+        .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+        .product-card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: transform 0.2s; padding: 16px; }
+        .product-card:hover { transform: translateY(-4px); }
+        .product-img { height: 160px; background: #e5e7eb; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 12px; }
+        .product-title { font-weight: 600; font-size: 18px; margin-bottom: 6px; }
+        .product-price { color: #2563eb; font-weight: bold; font-size: 20px; margin: 8px 0; }
+        .product-cat { font-size: 12px; color: #6b7280; margin-bottom: 12px; }
+        .add-to-cart { background: #10b981; color: white; border: none; width: 100%; padding: 10px; border-radius: 40px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .add-to-cart:hover { background: #059669; }
+        .cart-panel { position: fixed; right: 20px; top: 100px; width: 320px; background: white; border-radius: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 20px; z-index: 100; max-height: 500px; overflow-y: auto; display: none; }
+        .cart-panel.open { display: block; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .total { font-weight: bold; margin-top: 16px; font-size: 18px; }
+        .close-cart { float: right; cursor: pointer; background: #ef4444; color: white; border: none; width: 28px; border-radius: 20px; }
+        max-width: 700px { .cart-panel { width: 280px; top: 70px; } }
+    </style>
 </head>
 <body>
+<div class="container">
+    <header>
+        <h1>🛍️ МаркетEasy</h1>
+        <div class="search">
+            <input type="text" id="searchInput" placeholder="Поиск товаров...">
+        </div>
+        <button class="cart-btn" id="openCartBtn">🛒 Корзина (<span id="cartCount">0</span>)</button>
+    </header>
 
-<div class="header">
-  <h1>🛍️ ПОДБОРКИН</h1>
-  <p>🔥 20 видов товаров · в каждом по 6 уникальных позиций</p>
+    <div class="filters" id="filterContainer">
+        <button class="filter-btn active" data-cat="all">Все</button>
+        <button class="filter-btn" data-cat="electronics">Электроника</button>
+        <button class="filter-btn" data-cat="clothing">Одежда</button>
+        <button class="filter-btn" data-cat="home">Товары для дома</button>
+    </div>
+
+    <div class="products" id="productsContainer"></div>
 </div>
 
-<div class="app-container">
-  <aside class="filters-sidebar" id="filterSidebar">
-    <div class="filter-header">
-      <h3>🎯 Фильтры</h3>
-      <div class="filter-actions">
-        <button class="filter-btn" id="selectAllBtn">✅ Все</button>
-        <button class="filter-btn" id="clearFiltersBtn">❌ Сбросить</button>
-      </div>
-    </div>
-    <div id="categoriesList" class="categories-list"></div>
-    <div style="font-size: 11px; text-align: center; margin-top: 1rem; color: #5b6e8c;">✓ Отметьте категории — товары обновятся мгновенно</div>
-  </aside>
+<div class="cart-panel" id="cartPanel">
+    <button class="close-cart" id="closeCartBtn">✖</button>
+    <h3>Корзина</
 
-  <main class="products-area">
-    <div class="products-header">
-      <div class="result-info" id="resultCounter">⚡ Загрузка...</div>
-      <div style="font-size: 0.75rem;">✨ живой поиск по категориям</div>
-    </div>
-    <div id="productsContainer" class="products-grid"></div>
-  </main>
+
+h3>
+    <div id="cartItemsList"></div>
+    <div class="total" id="cartTotal"></div>
+    <button id="checkoutBtn" style="background:#2563eb; color:white; border:none; width:100%; padding:12px; border-radius:40px; margin-top:16px;">Оформить заказ</button>
 </div>
 
 <script>
-  // ======================= 1. ГЕНЕРАЦИЯ ТОВАРОВ =======================
-  const CATEGORIES_LIST = [
-    "Смартфоны", "Ноутбуки", "Наушники", "Умные часы", "Планшеты",
-    "Игровые приставки", "Фототехника", "Книги", "Детские товары", "Спорттовары",
-    "Одежда", "Обувь", "Бытовая техника", "Мебель", "Игрушки",
-    "Автотовары", "Продукты питания", "Зоотовары", "Косметика", "Инструменты"
-  ];
+    // Товары (имитация базы)
+    const products = [
+        { id: 1, name: "Смартфон X200", price: 29990, category: "electronics", image: "📱", desc: "6.7\", 128GB" },
+        { id: 2, name: "Ноутбук Pro 15", price: 68990, category: "electronics", image: "💻", desc: "16GB RAM, 512GB SSD" },
+        { id: 3, name: "Наушники AirSound", price: 4990, category: "electronics", image: "🎧", desc: "True Wireless" },
+        { id: 4, name: "Футболка хлопок", price: 1290, category: "clothing", image: "👕", desc: "Размеры S-XXL" },
+        { id: 5, name: "Джинсы классика", price: 3490, category: "clothing", image: "👖", desc: "Синий" },
+        { id: 6, name: "Кроссовки Sport", price: 4990, category: "clothing", image: "👟", desc: "Удобные" },
+        { id: 7, name: "Светильник LED", price: 1890, category: "home", image: "💡", desc: "Настольный" },
+        { id: 8, name: "Набор посуды", price: 3490, category: "home", image: "🍳", desc: "4 предмета" }
+    ];
 
-  const productsDatabase = [];
-  let nextId = 1;
-  const productModifiers = ["Pro", "Max", "Lite", "Plus", "Ultra", "Smart", "Turbo"];
+    let currentCategory = "all";
+    let searchQuery = "";
+    let cart = JSON.parse(localStorage.getItem("market_cart")) || [];
 
-  CATEGORIES_LIST.forEach((catName, idx) => {
-    for (let i = 1; i <= 6; i++) {
-      const mod = productModifiers[(idx + i) % productModifiers.length];
-      let title = "";
-      if (catName === "Смартфоны") title = `${catName} ${mod} ${i}00`;
-      else if (catName === "Ноутбуки") title = `${catName} ${mod}Book Gen${i}`;
-      else if (catName === "Наушники") title = `${catName} ${mod}Sound ${i}`;
-      else if (catName === "Книги") title = `${catName} «${mod} бестселлер» том ${i}`;
-      else title = `${catName} ${mod} версия ${i}`;
-      
-      let price = 0;
-      if (catName === "Смартфоны") price = 14990 + i * 2500;
-      else if (catName === "Ноутбуки") price = 42990 + i * 3000;
-      else if (catName === "Наушники") price = 2490 + i * 400;
-      else if (catName === "Мебель") price = 6990 + i * 1100;
-      else price = Math.floor(Math.random() * 5000) + 990 + (idx * 20
-
-
-0);
-      price = Math.max(490, Math.min(69990, price));
-      
-      const imageId = (nextId * 33) % 230 + 10;
-      const imageUrl = `https://picsum.photos/id/${imageId}/300/200`;
-      
-      productsDatabase.push({
-        id: nextId++,
-        name: title,
-        categoryId: idx,
-        categoryName: catName,
-        price: price,
-        image: imageUrl
-      });
+    function saveCart() {
+        localStorage.setItem("market_cart", JSON.stringify(cart));
+        updateCartUI();
     }
-  });
-  console.log("Сгенерировано товаров:", productsDatabase.length); // должно быть 120
 
-  // =============== 2. DOM элементы и состояние ==================
-  const categoriesContainer = document.getElementById('categoriesList');
-  const productsContainerDiv = document.getElementById('productsContainer');
-  const resultSpan = document.getElementById('resultCounter');
-  const selectAll = document.getElementById('selectAllBtn');
-  const clearFilters = document.getElementById('clearFiltersBtn');
-
-  let checkboxesRefs = [];  // { element, categoryId }
-
-  // =============== 3. Отрисовать фильтры (20 чекбоксов) =========
-  function buildFilters() {
-    categoriesContainer.innerHTML = '';
-    checkboxesRefs = [];
-    CATEGORIES_LIST.forEach((cat, index) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'category-item';
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.id = `filter_${index}`;
-      cb.value = index;
-      
-      const label = document.createElement('label');
-      label.htmlFor = `filter_${index}`;
-      label.textContent = cat;
-      
-      const countSpan = document.createElement('span');
-      const countHere = productsDatabase.filter(p => p.categoryId === index).length;
-      countSpan.className = 'cat-count';
-      countSpan.textContent = countHere;
-      
-      wrapper.appendChild(cb);
-      wrapper.appendChild(label);
-      wrapper.appendChild(countSpan);
-      
-      // 🟢 Главное исправление: при изменении чекбокса — перерисовываем товары
-      cb.addEventListener('change', function() {
-        renderFilteredProducts();
-      });
-      
-      categoriesContainer.appendChild(wrapper);
-      checkboxesRefs.push({ checkbox: cb, categoryId: index });
-    });
-  }
-
-  // получить выбранные ID категорий
-  function getSelectedCategoryIds() {
-    const selected = [];
-    checkboxesRefs.forEach(item => {
-      if (item.checkbox.checked) selected.push(item.categoryId);
-    });
-    return selected;
-  }
-
-  // фильтруем товары на основе выбранных категорий
-  function getFilteredProducts() {
-    const selected = getSelectedCategoryIds();
-    if (selected.length === 0) return [...productsDatabase];  // если ничего не выбрано – показываем всё
-    return productsDatabase.filter(prod => selected.includes(prod.categoryId));
-  }
-
-  // отрисовка карточек после фильтрации
-  function renderFilteredProducts() {
-    const filtered = getFilteredProducts();
-    const selectedCount = getSelectedCategoryIds().length;
-    if (filtered.length === 0) {
-      productsContainerDiv.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2.5rem; background:#f9fafb; border-radius:2rem;">😕 По выбранным фильтрам товаров нет. Измените категории.</div>`;
-      resultSpan.innerHTML = `📭 Нет товаров · фильтров активно: ${selectedCount}`;
-      return;
-    }
-    
-    let htmlCards = '';
-    for (let prod of filtered) {
-      const priceFormatted = new Intl.NumberFormat('ru-RU').format(prod.price);
-      htmlCards += `
-        <div class="product-card">
-          <img class="product-img" src="${prod.image}" alt="${prod.name}" loading="lazy" onerror="this.src='https://placehold.co/300x200?text=ПОДБОРКИН'">
-          <div class="product-info">
-            <div class="product-title">${escapeHtml(prod.name)}</div>
-            <span class="product-category">📁 ${escapeHtml(prod.categoryName)}</span>
-            <div class="product-price">${priceFormatted} ₽</div>
-            <button class="buy-btn" data-id="${prod.id}">🛒 В корзину</button>
-          </div>
-        </div>
-      `;
-    }
-    products
-
-
-ContainerDiv.innerHTML = htmlCards;
-    resultSpan.innerHTML = `📦 Найдено ${filtered.length} товаров · категорий выбрано: ${selectedCount}`;
-    
-    // вешаем обработчики на кнопки купить
-    document.querySelectorAll('.buy-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const pid = parseInt(btn.getAttribute('data-id'));
-        const product = productsDatabase.find(p => p.id === pid);
-        if(product) {
-          alert(`✅ Добавлено: ${product.name}\n💰 ${new Intl.NumberFormat('ru-RU').format(product.price)} ₽`);
+    function addToCart(productId) {
+        const product = products.find(p => p.id === productId);
+        if (!product) return;
+        const existing = cart.find(item => item.id === productId);
+        if (existing) {
+            existing.quantity += 1;
         } else {
-          alert("Товар временно не найден");
+            cart.push({ ...product, quantity: 1 });
         }
-      });
-    });
-  }
+        saveCart();
+        alert(`✅ ${product.name} добавлен в корзину`);
+    }
 
-  // вспомогательная защита от XSS
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if(m === '&') return '&amp;';
-      if(m === '<') return '&lt;';
-      if(m === '>') return '&gt;';
-      return m;
-    });
-  }
+    function removeFromCart(productId) {
+        cart = cart.filter(item => item.id !== productId);
+        saveCart();
+    }
 
-  // ========== Управление фильтрами глобально =========
-  function selectAllFilters() {
-    checkboxesRefs.forEach(item => {
-      item.checkbox.checked = true;
-    });
-    renderFilteredProducts();
-  }
-  
-  function clearAllFilters() {
-    checkboxesRefs.forEach(item => {
-      item.checkbox.checked = false;
-    });
-    renderFilteredProducts();
-  }
+    function changeQuantity(id, delta) {
+        const item = cart.find(i => i.id === id);
+        if (item) {
+            item.quantity += delta;
+            if (item.quantity <= 0) {
+                removeFromCart(id);
+            } else {
+                saveCart();
+            }
+        }
+    }
 
-  // ========== Инициализация =========
-  function init() {
-    buildFilters();          // строим 20 фильтров
-    renderFilteredProducts(); // показываем все товары (т.к. чекбоксы пустые)
-    selectAll.addEventListener('click', selectAllFilters);
-    clearFilters.addEventListener('click', clearAllFilters);
-  }
-  
-  init();
+    function updateCartUI() {
+        const count = cart.reduce((sum, i) => sum + i.quantity, 0);
+        document.getElementById("cartCount").innerText = count;
+        
+        const cartItemsDiv = document.getElementById("cartItemsList");
+        const totalSpan = document.getElementById("cartTotal");
+        if (!cartItemsDiv) return;
+        
+        if (cart.length === 0) {
+            cartItemsDiv.innerHTML = "<p>Корзина пуста</p>";
+            totalSpan.innerText = "Итого: 0 ₽";
+            return;
+        }
+        
+        let html = "";
+        let total = 0;
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            total += itemTotal;
+            html += `
+                <div class="cart-item">
+                    <div><strong>${item.name}</strong>
+${item.price} ₽ x ${item.quantity}</div>
+                    <div>
+                        <button onclick="changeQuantity(${item.id}, -1)" style="background:#f97316; border:none; border-radius:20px; width:28px;">-</button>
+                        <span style="margin:0 6px;">${item.quantity}</span>
+                        <button onclick="changeQuantity(${item.id}, 1)" style="background:#10b981; border:none; border-radius:20px; width:28px;">+</button>
+                        <button onclick="removeFromCart(${item.id})" style="background:#ef4444; margin-left:8px; border:none; border-radius:20px;">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        cartItemsDiv.innerHTML = html;
+        totalSpan.innerText = `Итого: ${total} ₽`;
+    }
+
+    function renderProducts() {
+        let filtered = pro
+
+
+ducts;
+        if (currentCategory !== "all") {
+            filtered = filtered.filter(p => p.category === currentCategory);
+        }
+        if (searchQuery.trim() !== "") {
+            const q = searchQuery.toLowerCase();
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+        }
+        
+        const container = document.getElementById("productsContainer");
+        if (!container) return;
+        if (filtered.length === 0) {
+            container.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:40px;'>😞 Товаров не найдено</div>";
+            return;
+        }
+        
+        container.innerHTML = filtered.map(p => `
+            <div class="product-card">
+                <div class="product-img">${p.image}</div>
+                <div class="product-title">${p.name}</div>
+                <div class="product-cat">${p.category === 'electronics' ? '📱 Электроника' : p.category === 'clothing' ? '👕 Одежда' : '🏠 Дом'}</div>
+                <div class="product-price">${p.price.toLocaleString()} ₽</div>
+                <div style="font-size:12px; color:#666; margin-bottom:12px;">${p.desc}</div>
+                <button class="add-to-cart" onclick="addToCart(${p.id})">➕ В корзину</button>
+            </div>
+        `).join("");
+    }
+
+    // фильтры и поиск
+    document.getElementById("searchInput")?.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderProducts();
+    });
+    
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentCategory = btn.getAttribute("data-cat");
+            renderProducts();
+        });
+    });
+    
+    // корзина попап
+    const cartPanel = document.getElementById("cartPanel");
+    document.getElementById("openCartBtn")?.addEventListener("click", () => {
+        cartPanel.classList.add("open");
+        updateCartUI();
+    });
+    document.getElementById("closeCartBtn")?.addEventListener("click", () => {
+        cartPanel.classList.remove("open");
+    });
+    document.getElementById("checkoutBtn")?.addEventListener("click", () => {
+        if(cart.length === 0) { alert("Корзина пуста"); return; }
+        alert("✅ Спасибо за заказ! (Демо-режим, товары сохранены в localStorage)");
+        // можно очистить корзину: cart = []; saveCart(); updateCartUI(); но для демо оставляем
+    });
+    
+    renderProducts();
+    updateCartUI();
+    
+    // закрыть по клику вне панели (просто)
+    window.onclick = (e) => {
+        if (cartPanel && !cartPanel.contains(e.target) && e.target !== document.getElementById("openCartBtn")) {
+            cartPanel.classList.remove("open");
+        }
+    };
 </script>
 </body>
 </html>
